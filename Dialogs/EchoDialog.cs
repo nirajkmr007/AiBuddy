@@ -33,8 +33,17 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             }
             else
             {
-                await context.PostAsync($"{this.count++}: what {message.Text} means?");
-                context.Wait(MessageReceivedAsync);
+                string intent =await Luis.MakeRequest(message.Text);
+                if (intent == "None")
+                {
+                    await context.PostAsync($"{this.count++}: what {message.Text} means? {Environment.NewLine} I am a Just Born not mature enough to understand that.");
+                    context.Wait(MessageReceivedAsync);
+                }
+                else
+                {
+                    await context.PostAsync($"{this.count++}: {intent}");
+                    context.Wait(MessageReceivedAsync);
+                }
             }
         }
 
